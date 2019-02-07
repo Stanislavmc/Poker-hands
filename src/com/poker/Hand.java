@@ -2,33 +2,31 @@ package com.poker;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 
 import com.poker.enums.CardRank;
 import com.poker.enums.Combination;
 import com.poker.enums.Suit;
 
 public class Hand {
-	private ArrayList<Card> cards;
-	private ArrayList<Card> cardsSortedByValue = new ArrayList<>();
-	private ArrayList<Card> firstPair = new ArrayList<>();
-	private ArrayList<Card> secondPair = new ArrayList<>();
+	private List<Card> cards;
+	private List<Card> cardsSortedByCombination = new ArrayList<>();
+	private List<Card> firstPair = new ArrayList<>();
+	private List<Card> secondPair = new ArrayList<>();
 	private Combination combination;
 
-	public Hand(ArrayList<Card> cards) {
+	public Hand(List<Card> cards) {
 		this.cards = cards;
 		cards.sort(Comparator.comparing(Card::getCardRankNumber));
 		combination = countCombination(cards);
 		initCardsLists();
-		
-
 	}
-	
 	
 	private void initCardsLists() {
 		// if we have cards 5C 5S 6C 7S JS, then cards with combination are 5C 5S, 
 		// other are without combination : 6C 7S JS
-		ArrayList<Card> cardsWithCombination = new ArrayList<>();
-		ArrayList<Card> cardsWithoutCombination = new ArrayList<>();
+		List<Card> cardsWithCombination = new ArrayList<>();
+		List<Card> cardsWithoutCombination = new ArrayList<>();
 		
 		switch (combination) {
 		case ROYAL_FLUSH:
@@ -67,8 +65,8 @@ public class Hand {
 		cardsWithoutCombination.removeAll(cardsWithCombination);
 		
 		// get list of cards, where on the right will be cards with combinations, on the left - without combinations
-		cardsSortedByValue.addAll(cardsWithoutCombination);
-		cardsSortedByValue.addAll(cardsWithCombination);
+		cardsSortedByCombination.addAll(cardsWithoutCombination);
+		cardsSortedByCombination.addAll(cardsWithCombination);
 	}
 	
 
@@ -77,10 +75,9 @@ public class Hand {
 		return cards.get(cards.size() - 1);
 	}
 	
-	private Combination countCombination(ArrayList<Card> cards) {
+	private Combination countCombination(List<Card> cards) {
 
 		Combination result = Combination.HIGH_CARD;
-
 		if (isStraight(cards)) {
 			result = Combination.STRAIGHT;
 		}
@@ -97,21 +94,19 @@ public class Hand {
 		if (Combination.STRAIGHT_FLUSH.equals(result) && cards.get(cards.size() - 1).getCardRank().equals(CardRank.ACE)) {
 			result = Combination.ROYAL_FLUSH;
 		}
-
 		if (!Combination.ROYAL_FLUSH.equals(result) && !Combination.STRAIGHT_FLUSH.equals(result)) {
 			Combination pairCombinationResult = getPairCombination(cards);
 			if (pairCombinationResult.getCombinationNumber() > result.getCombinationNumber()) {
 				result = pairCombinationResult;
 			}
 		}
-
 		return result;
 	}
 
 	// method returns one of those combinations
 	// FOUR_OF_A_KIND FULL_HOUSE THREE_OF_A_KIND TWO_PAIR ONE_PAIR
 	// if hand does not have pairs at all, then it returns HIGH_CARD
-	private Combination getPairCombination(ArrayList<Card> hand) {
+	private Combination getPairCombination(List<Card> hand) {
 		Combination combination = Combination.HIGH_CARD;
 		// sameRankSet values :
 		// 1 - no the same cards, 2 - two the same cards, 3 - three the same cards etc.
@@ -145,17 +140,16 @@ public class Hand {
 		} else if (firstPair.size() == 2) {
 			combination = Combination.ONE_PAIR;
 		}
-
 		return combination;
 	}
 
-	private <E> void addIfNotExists(ArrayList<E> list, E element) {
+	private <E> void addIfNotExists(List<E> list, E element) {
 		if(!list.contains(element)) {
 			list.add(element);
 		}
 	}
 	
-	private boolean isStraight(ArrayList<Card> hand) {
+	private boolean isStraight(List<Card> hand) {
 		int firstCardRankNumber = hand.get(0).getCardRankNumber();
 		int sum = 0; // straight if sum is 10 : 0+1+2+3+4
 		for (Card card : hand) {
@@ -167,7 +161,7 @@ public class Hand {
 			return false;
 	}
 
-	private boolean isFlash(ArrayList<Card> hand) {
+	private boolean isFlash(List<Card> hand) {
 		Suit firstCardSuit = hand.get(0).getSuit();
 		for (Card card : hand) {
 			// if all suits are the same, then it is flash
@@ -182,12 +176,16 @@ public class Hand {
 		return combination;
 	}
 	
-	public ArrayList<Card> getCardsSortedByValue() {
-		return cardsSortedByValue;
+	public List<Card> getCardsSortedByCombination() {
+		return cardsSortedByCombination;
 	}
 	
 	@Override
 	public String toString() {
-		return cardsSortedByValue.toString();
+		StringBuffer sb = new StringBuffer();
+		for(Card c : cardsSortedByCombination) {
+			sb.append(c.toString()).append(" ");
+		}
+		return sb.toString();
 	}
 }

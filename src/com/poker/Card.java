@@ -13,7 +13,8 @@ public class Card {
 		this.suit = suit;
 	}
 
-	public Card(String cardCode) { // card code is a card rank and suit ex.: 8H - 8 Hearts, TC - Ten Clubs
+	// card code is a card rank and suit ex.: 8H - 8 Hearts, TC - Ten Clubs
+	public Card(String cardCode) { 
 		if (cardCode != null && cardCode.length() == 2) {
 			
 			switch (cardCode.charAt(0)) {

@@ -4,32 +4,30 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Game {
 
 	public static void main(String[] args) {
-		args = new String[1]; // TODO remove those tmp two lines
-		args[0] = "pokerdata.txt";
-		CombinationCounter combinationCounter = new CombinationCounter();
 		if (args.length > 0) {
 			String fileName = args[0];
 
 			int player1WinCounter = 0;
 			try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
 				String line;
+				CombinationCounter combinationCounter = new CombinationCounter();
 				// read data from the file line by line
-				int cnt = 1;
-				System.out.println("Hand	 	Player 1	 	Player 2	Player1 is winner");
+				int counter = 1;
+				System.out.println("Hand	Player 1		Player 2	Player1 is winner");
+
 				while ((line = br.readLine()) != null) {
-					System.out.print(cnt+++" ");
-					ArrayList<Card> cards1 = new ArrayList<Card>();
-					ArrayList<Card> cards2 = new ArrayList<Card>();
+					List<Card> cards1 = new ArrayList<Card>();
+					List<Card> cards2 = new ArrayList<Card>();
+					int cardCount = 0;
 
 					// one line example:
 					// 8C TS KC 9H 4S 7D 2S 5D 3S AC
 					// 5 cards has one player, and second 5 cards - second player
-					int cardCount = 0;
-
 					// split cards between two players
 					for (String cardCode : line.split(" ")) {
 						if (cardCount++ < 5) {
@@ -44,7 +42,9 @@ public class Game {
 					if (player1Winner) {
 						player1WinCounter++;
 					}
-					if (cnt > 5) break;// TODO 
+					System.out.println(counter++ + " \t" + hand1 + "\t\t" + hand2 + "\t" + player1Winner);
+					System.out.println("\t"+hand1.getCombination()+"\t\t"+hand2.getCombination());	
+					System.out.println();
 				}
 				System.out.println("Player1 won " + player1WinCounter + " times");
 			} catch (IOException e) {
