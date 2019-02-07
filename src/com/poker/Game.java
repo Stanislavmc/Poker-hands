@@ -18,7 +18,7 @@ public class Game {
 				CombinationCounter combinationCounter = new CombinationCounter();
 				// read data from the file line by line
 				int counter = 1;
-				System.out.println("Hand	Player 1		Player 2	Player1 is winner");
+				System.out.println("Hand\t\tPlayer 1\t\tPlayer 2\tPlayer1 is winner");
 
 				while ((line = br.readLine()) != null) {
 					List<Card> cards1 = new ArrayList<Card>();
