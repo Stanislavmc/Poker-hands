@@ -22,8 +22,8 @@ public class Game {
 				System.out.println("Hand	 	Player 1	 	Player 2	Player1 is winner");
 				while ((line = br.readLine()) != null) {
 					System.out.print(cnt+++" ");
-					ArrayList<Card> hand1 = new ArrayList<Card>();
-					ArrayList<Card> hand2 = new ArrayList<Card>();
+					ArrayList<Card> cards1 = new ArrayList<Card>();
+					ArrayList<Card> cards2 = new ArrayList<Card>();
 
 					// one line example:
 					// 8C TS KC 9H 4S 7D 2S 5D 3S AC
@@ -33,27 +33,23 @@ public class Game {
 					// split cards between two players
 					for (String cardCode : line.split(" ")) {
 						if (cardCount++ < 5) {
-							hand1.add(new Card(cardCode));
+							cards1.add(new Card(cardCode));
 						} else {
-							hand2.add(new Card(cardCode));
+							cards2.add(new Card(cardCode));
 						}
 					}
-
+					Hand hand1 = new Hand(cards1);
+					Hand hand2 = new Hand(cards2);
 					boolean player1Winner = combinationCounter.isPlayerOneWinner(hand1, hand2);
 					if (player1Winner) {
 						player1WinCounter++;
 					}
-//					if (cnt > 5) break;// TODO
+					if (cnt > 5) break;// TODO 
 				}
 				System.out.println("Player1 won " + player1WinCounter + " times");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-
-			// read file
-			// creat enums
-			// write compares
-			// sorting?
 
 		} else {
 			System.out.println("Please enter file name with poker data");
